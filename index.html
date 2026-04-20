@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Certificación por Puesto — Le Méridien Reforma</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg:        #0a0a0b;
+    --bg-2:      #111113;
+    --bg-3:      #18181b;
+    --border:    rgba(255,255,255,0.07);
+    --border-hi: rgba(255,255,255,0.14);
+    --gold:      #c9a84c;
+    --gold-dim:  rgba(201,168,76,0.15);
+    --gold-glow: rgba(201,168,76,0.06);
+    --text:      #f0ede8;
+    --text-2:    #9b9890;
+    --text-3:    #5a5855;
+    --pending:   #3d3d3d;
+    --progress:  #1a3a4a;
+    --progress-accent: #2a9fd6;
+    --done:      #1a3320;
+    --done-accent: #3aaa5c;
+    --radius:    3px;
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body:    'DM Sans', sans-serif;
+    --font-mono:    'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ───────────────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,10,11,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 56px;
+  }
+
+  .nav-brand {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--text-2);
+    text-transform: uppercase;
+  }
+
+  .nav-brand span { color: var(--gold); }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    transition: all 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--text);
+    border-color: var(--border-hi);
+  }
+
+  .nav-links a.active {
+    color: var(--gold);
+    border-color: var(--gold-dim);
+    background: var(--gold-glow);
+  }
+
+  /* ── HERO ──────────────────────────────────────────────── */
+  #vista-ejecutiva {
+    padding: 140px 40px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .section-tag::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-headline {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    max-width: 780px;
+    margin-bottom: 20px;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text-2);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .meta-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .meta-value {
+    font-size: 13px;
+    color: var(--text-2);
+  }
+
+  /* ── DIVIDER ───────────────────────────────────────────── */
+  .divider {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── FLOW ──────────────────────────────────────────────── */
+  .flow-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px 80px;
+  }
+
+  .flow-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--text-2);
+    margin-bottom: 48px;
+    letter-spacing: 0.02em;
+  }
+
+  .flow-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .flow-grid::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: calc(10% + 12px);
+    right: calc(10% + 12px);
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold-dim), var(--border), var(--gold-dim));
+    z-index: 0;
+  }
+
+  .flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 8px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .flow-step:nth-child(1) { animation-delay: 0.05s; }
+  .flow-step:nth-child(2) { animation-delay: 0.12s; }
+  .flow-step:nth-child(3) { animation-delay: 0.19s; }
+  .flow-step:nth-child(4) { animation-delay: 0.26s; }
+  .flow-step:nth-child(5) { animation-delay: 0.33s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-node {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    border: 1px solid;
+    position: relative;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  .flow-step:hover .step-node {
+    transform: scale(1.08);
+  }
+
+  .step-1 .step-node { background: rgba(201,168,76,0.1); border-color: var(--gold); color: var(--gold); }
+  .step-2 .step-node { background: rgba(42,159,214,0.1); border-color: #2a9fd6; color: #2a9fd6; }
+  .step-3 .step-node { background: rgba(167,119,227,0.1); border-color: #a777e3; color: #a777e3; }
+  .step-4 .step-node { background: rgba(58,170,92,0.1); border-color: #3aaa5c; color: #3aaa5c; }
+  .step-5 .step-node { background: rgba(232,89,76,0.1); border-color: #e8594c; color: #e8594c; }
+
+  .step-icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .step-number {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    position: absolute;
+    top: -18px;
+    color: var(--text-3);
+  }
+
+  .step-label {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .step-desc {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+
+  .step-owner {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--border-hi);
+    color: var(--text-3);
+  }
+
+  .step-output {
+    margin-top: 8px;
+    font-size: 10px;
+    color: var(--text-3);
+    font-style: italic;
+  }
+
+  /* ── MATERIALS ─────────────────────────────────────────── */
+  .materials-section {
+    background: var(--bg-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .materials-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  .materials-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 36px;
+  }
+
+  .mat-card {
+    background: var(--bg-2);
+    padding: 28px 24px;
+    transition: background 0.2s;
+  }
+
+  .mat-card:hover { background: var(--bg-3); }
+
+  .mat-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+  }
+
+  .mat-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .mat-desc {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+
+  /* ── TRACKER ───────────────────────────────────────────── */
+  #tablero-trabajo {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+
+  .tracker-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .tracker-title-block {}
+
+  .tracker-title {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .tracker-sub {
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  .progress-summary {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .prog-bar-wrap {
+    width: 200px;
+  }
+
+  .prog-bar-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-3);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .prog-bar {
+    height: 3px;
+    background: var(--bg-3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .prog-bar-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* Stage cards */
+  .stage-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .stage-card.state-progress { border-color: rgba(42,159,214,0.3); }
+  .stage-card.state-done     { border-color: rgba(58,170,92,0.3); }
+  .stage-card.state-pending  { border-color: var(--border); }
+
+  .stage-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 24px;
+    gap: 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .stage-header:hover { background: rgba(255,255,255,0.02); }
+
+  .stage-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text-3);
+    min-width: 28px;
+  }
+
+  .stage-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+
+  .state-pending  .stage-dot { background: var(--text-3); }
+  .state-progress .stage-dot { background: var(--progress-accent); box-shadow: 0 0 6px rgba(42,159,214,0.5); }
+  .state-done     .stage-dot { background: var(--done-accent); box-shadow: 0 0 6px rgba(58,170,92,0.4); }
+
+  .stage-info { flex: 1; }
+
+  .stage-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .stage-owner-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+
+  .stage-status-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    background: transparent;
+  }
+
+  .state-pending  .stage-status-btn { border-color: var(--border-hi); color: var(--text-3); }
+  .state-progress .stage-status-btn { border-color: rgba(42,159,214,0.4); color: var(--progress-accent); background: rgba(42,159,214,0.07); }
+  .state-done     .stage-status-btn { border-color: rgba(58,170,92,0.4); color: var(--done-accent); background: rgba(58,170,92,0.07); }
+
+  .stage-status-btn:hover { filter: brightness(1.2); }
+
+  .stage-toggle {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-3);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+
+  .stage-card.expanded .stage-toggle {
+    transform: rotate(180deg);
+  }
+
+  .stage-body {
+    display: none;
+    padding: 0 24px 24px;
+    animation: slideDown 0.2s ease;
+  }
+
+  .stage-card.expanded .stage-body {
+    display: block;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .stage-body-inner {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .stage-desc-block {}
+
+  .block-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+
+  .stage-description {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.65;
+  }
+
+  .stage-deliverable {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: var(--gold-glow);
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius);
+    font-size: 12px;
+    color: var(--text-2);
+  }
+
+  .stage-deliverable strong {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .notes-block {}
+
+  .notes-area {
+    width: 100%;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.65;
+    padding: 12px 14px;
+    resize: vertical;
+    min-height: 90px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .notes-area::placeholder { color: var(--text-3); }
+  .notes-area:focus { border-color: var(--border-hi); }
+
+  .notes-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+    gap: 8px;
+  }
+
+  .btn-save {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-save:hover { background: rgba(201,168,76,0.25); }
+
+  .btn-saved {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--done-accent);
+    padding: 6px 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .btn-saved.show { opacity: 1; }
+
+  /* Checklist inside stage */
+  .stage-checklist {
+    margin-top: 14px;
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .checklist-item:last-child { border-bottom: none; }
+
+  .ci-box {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--border-hi);
+    border-radius: 2px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    transition: all 0.2s;
+  }
+
+  .checklist-item.checked .ci-box {
+    background: var(--done-accent);
+    border-color: var(--done-accent);
+    color: #fff;
+  }
+
+  .ci-text {
+    font-size: 12px;
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+
+  .checklist-item.checked .ci-text {
+    color: var(--text-3);
+    text-decoration: line-through;
+  }
+
+  /* ── FOOTER ────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-brand {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--text-3);
+  }
+
+  .footer-brand span { color: var(--gold); }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  /* ── RESPONSIVE ────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    #vista-ejecutiva { padding: 100px 20px 60px; }
+    .flow-section { padding: 40px 20px 60px; }
+    .materials-inner { padding: 40px 20px; }
+    #tablero-trabajo { padding: 60px 20px; }
+    footer { padding: 24px 20px; }
+    .divider { padding: 0 20px; }
+
+    .flow-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .flow-grid::before { display: none; }
+
+    .flow-step {
+      flex-direction: row;
+      text-align: left;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .step-node { margin-bottom: 0; flex-shrink: 0; }
+
+    .materials-grid { grid-template-columns: 1fr 1fr; }
+
+    .stage-body-inner { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-meta { gap: 20px; }
+    .materials-grid { grid-template-columns: 1fr; }
+    .tracker-header { flex-direction: column; align-items: flex-start; }
+    .nav-links { display: none; }
+  }
+
+  /* ── TOAST ─────────────────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg-3);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-2);
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.25s;
+    pointer-events: none;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .toast.gold { border-color: var(--gold); color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand"><span>LM</span> / Sistema de Certificación</div>
+  <div class="nav-links">
+    <a href="#vista-ejecutiva" class="active">Vista Ejecutiva</a>
+    <a href="#tablero-trabajo">Tablero de Trabajo</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     SECCIÓN 1 — VISTA EJECUTIVA
+═══════════════════════════════════════════════ -->
+<section id="vista-ejecutiva">
+  <div class="section-tag">Le Méridien Reforma · Programa de Formación y Certificación</div>
+
+  <h1 class="hero-headline">
+    Cada colaborador,<br>
+    <em>certificado al 100%</em><br>
+    en su puesto.
+  </h1>
+
+  <p class="hero-sub">
+    Un sistema estructurado que convierte políticas, manuales de puesto y estándares de marca en rutas de certificación individuales — para cada rol, en cada área del hotel.
+  </p>
+
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="meta-label">Proyecto</span>
+      <span class="meta-value">Sistema de Certificación por Puesto</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Líder Operativo</span>
+      <span class="meta-value">Víctor Tenorio &amp; Horacio — Calidad</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Metodología</span>
+      <span class="meta-value">HATS + Políticas + DLZ + Gruppo Romano</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Resultado Final</span>
+      <span class="meta-value">Certificación 100% por Colaborador</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FLOW -->
+<div class="flow-section">
+  <h2 class="flow-title">Flujo del sistema — 5 etapas secuenciales</h2>
+
+  <div class="flow-grid">
+
+    <div class="flow-step step-1">
+      <div class="step-node">
+        <span class="step-number">01</span>
+        <span class="step-icon">📋</span>
+      </div>
+      <div>
+        <div class="step-label">Recopilación de Políticas</div>
+        <div class="step-desc">Organizar y clasificar todas las políticas existentes de Le Méridien por área según el organigrama del hotel.</div>
+        <span class="step-owner">Víctor Tenorio</span>
+        <div class="step-output">→ Repositorio de políticas clasificado</div>
+      </div>
+    </div>
+
+    <div class="flow-step step-2">
+      <div class="step-node">
+        <span class="step-number">02</span>
+        <span class="step-icon">🔗</span>
+      </div>
+      <div>
+        <div class="step-label">Asignación a Puestos</div>
+        <div class="step-desc">Vincular cada política al puesto o puestos que le corresponden dentro del organigrama del hotel.</div>
+        <span class="step-owner">Horacio — Calidad</span>
+        <div class="step-output">→ Matriz política × puesto</div>
+      </div>
+    </div>
+
+    <div class="flow-step step-3">
+      <div class="step-node">
+        <span class="step-number">03</span>
+        <span class="step-icon">📦</span>
+      </div>
+      <div>
+        <div class="step-label">Paquete por Puesto</div>
+        <div class="step-desc">Unir las políticas asignadas con el HAT/manual de puesto. El resultado es un paquete completo e integrado por rol.</div>
+        <span class="step-owner">Horacio — Calidad</span>
+        <div class="step-output">→ Paquete completo por puesto</div>
+      </div>
+    </div>
+
+    <div class="flow-step step-4">
+      <div class="step-node">
+        <span class="step-number">04</span>
+        <span class="step-icon">✅</span>
+      </div>
+      <div>
+        <div class="step-label">Checklist de Estudio</div>
+        <div class="step-desc">Por cada paquete, construir una checklist de estudio en secuencia lógica que el colaborador debe completar para dominar su puesto.</div>
+        <span class="step-owner">Horacio — Calidad</span>
+        <div class="step-output">→ Checklist secuencial por puesto</div>
+      </div>
+    </div>
+
+    <div class="flow-step step-5">
+      <div class="step-node">
+        <span class="step-number">05</span>
+        <span class="step-icon">🎓</span>
+      </div>
+      <div>
+        <div class="step-label">Curso de Certificación</div>
+        <div class="step-desc">HAT + políticas + DLZ + estándares Gruppo Romano integrados en un curso oficial. Al completarlo, el colaborador queda certificado 100%.</div>
+        <span class="step-owner">Víctor + Horacio</span>
+        <div class="step-output">→ Certificación oficial por colaborador</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MATERIALS -->
+<div class="materials-section">
+  <div class="materials-inner">
+    <div class="section-tag">Componentes del sistema</div>
+    <div class="materials-grid">
+      <div class="mat-card">
+        <div class="mat-icon">📘</div>
+        <div class="mat-name">HAT / Manuales de Puesto</div>
+        <div class="mat-desc">Metodología HATS. Define las funciones, responsabilidades y estándares de desempeño de cada rol.</div>
+      </div>
+      <div class="mat-card">
+        <div class="mat-icon">📜</div>
+        <div class="mat-name">Políticas Le Méridien</div>
+        <div class="mat-desc">Marco normativo interno del hotel. Clasificadas por área y vinculadas a cada puesto del organigrama.</div>
+      </div>
+      <div class="mat-card">
+        <div class="mat-icon">🎯</div>
+        <div class="mat-name">DLZ</div>
+        <div class="mat-desc">Daily Line-up Zones. Material operativo de entrenamiento y refuerzo de estándares en el día a día.</div>
+      </div>
+      <div class="mat-card">
+        <div class="mat-icon">⭐</div>
+        <div class="mat-name">Estándares Gruppo Romano</div>
+        <div class="mat-desc">Estándares de servicio y operación de la cadena. Garantizan la consistencia de experiencia en toda la propiedad.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SECCIÓN 2 — TABLERO DE TRABAJO
+═══════════════════════════════════════════════ -->
+<section id="tablero-trabajo">
+  <div class="tracker-header">
+    <div class="tracker-title-block">
+      <div class="section-tag">Tablero de Trabajo — Víctor &amp; Horacio</div>
+      <h2 class="tracker-title">Seguimiento del Proyecto</h2>
+      <p class="tracker-sub">Actualiza estados, agrega notas y rastrea avances. Todo se guarda automáticamente.</p>
+    </div>
+    <div class="progress-summary">
+      <div class="prog-bar-wrap">
+        <div class="prog-bar-label">
+          <span>Progreso Global</span>
+          <span id="prog-pct">0%</span>
+        </div>
+        <div class="prog-bar">
+          <div class="prog-bar-fill" id="prog-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="stage-list"></div>
+</section>
+
+<footer>
+  <div class="footer-brand"><span>VS &amp; Co.</span> / Le Méridien Reforma — Uso Interno</div>
+  <div class="footer-note">Los datos se guardan en este navegador · Última actualización: <span id="last-update">—</span></div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── DATA ──────────────────────────────────────── */
+const STAGES = [
+  {
+    id: 1,
+    num: '01',
+    name: 'Recopilación de Políticas',
+    owner: 'Víctor Tenorio',
+    color: '#c9a84c',
+    description: 'Organizar todas las políticas existentes de Le Méridien y clasificarlas por área según las divisiones del organigrama actual del hotel. Esta etapa establece la base documental de todo el sistema.',
+    deliverable: 'Repositorio de políticas organizadas y clasificadas por área/departamento.',
+    checklist: [
+      'Identificar y reunir todas las políticas existentes del hotel',
+      'Clasificar políticas por área según el organigrama actual',
+      'Revisar políticas desactualizadas o faltantes',
+      'Crear índice maestro de políticas',
+      'Validar con GM y Líderes de Área'
+    ]
+  },
+  {
+    id: 2,
+    num: '02',
+    name: 'Asignación de Políticas a Puestos',
+    owner: 'Horacio — Calidad',
+    color: '#2a9fd6',
+    description: 'Vincular cada política al puesto o puestos que le corresponden dentro del organigrama. Una política puede aplicar a uno o múltiples puestos. Esta etapa produce la matriz de cobertura normativa.',
+    deliverable: 'Matriz política × puesto: cada puesto sabe exactamente qué políticas le aplican.',
+    checklist: [
+      'Listar todos los puestos del organigrama',
+      'Revisar política por política y asignar puestos',
+      'Validar asignaciones con Líderes de Área',
+      'Identificar puestos sin cobertura de política',
+      'Documentar matriz en formato manejable'
+    ]
+  },
+  {
+    id: 3,
+    num: '03',
+    name: 'Construcción del Paquete por Puesto',
+    owner: 'Horacio — Calidad',
+    color: '#a777e3',
+    description: 'Unir las políticas asignadas con el HAT/manual de puesto correspondiente. El paquete integrado es el insumo base para construir la ruta de certificación de cada colaborador.',
+    deliverable: 'Paquete completo por puesto: HAT + políticas asignadas + materiales adicionales.',
+    checklist: [
+      'Cruzar matriz de políticas con HATs disponibles',
+      'Identificar HATs faltantes o incompletos',
+      'Construir/actualizar HAT donde sea necesario',
+      'Integrar paquete por puesto en un solo documento',
+      'Revisión de calidad por puesto crítico'
+    ]
+  },
+  {
+    id: 4,
+    num: '04',
+    name: 'Creación de Checklists de Estudio',
+    owner: 'Horacio — Calidad',
+    color: '#3aaa5c',
+    description: 'Por cada paquete de puesto, construir una checklist de estudio en secuencia lógica. La checklist guía al colaborador a través de todos los temas que debe dominar antes de presentar su certificación.',
+    deliverable: 'Checklist de estudio por puesto, en secuencia de menor a mayor complejidad.',
+    checklist: [
+      'Definir criterio de secuencia lógica de temas',
+      'Construir checklist base por puesto',
+      'Revisar con colaboradores actuales (feedback)',
+      'Ajustar y validar secuencia',
+      'Producir versión final imprimible y digital'
+    ]
+  },
+  {
+    id: 5,
+    num: '05',
+    name: 'Curso Oficial de Certificación',
+    owner: 'Víctor Tenorio + Horacio',
+    color: '#e8594c',
+    description: 'Integrar el HAT, políticas, DLZ, estándares de Gruppo Romano y cualquier material adicional en un curso oficial por puesto. Al completarlo y aprobar la evaluación, el colaborador queda certificado al 100% en su puesto.',
+    deliverable: 'Curso oficial + evaluación + constancia de certificación por colaborador.',
+    checklist: [
+      'Diseñar estructura del curso por puesto',
+      'Producir contenido didáctico (módulos + evaluación)',
+      'Incorporar DLZ y estándares Gruppo Romano',
+      'Definir umbral de aprobación y proceso de re-evaluación',
+      'Programa piloto con un área',
+      'Lanzamiento formal y calendario de certificaciones'
+    ]
+  }
+];
+
+const STATUS_CYCLE = ['pending', 'progress', 'done'];
+const STATUS_LABELS = { pending: 'Pendiente', progress: 'En progreso', done: 'Completado' };
+const STATUS_ICONS  = { pending: '○', progress: '◑', done: '●' };
+
+/* ─── STATE ─────────────────────────────────────── */
+function loadState() {
+  try {
+    const raw = localStorage.getItem('lm_cert_v2');
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+function saveState(state) {
+  localStorage.setItem('lm_cert_v2', JSON.stringify(state));
+  const now = new Date();
+  document.getElementById('last-update').textContent =
+    now.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }) +
+    ' ' + now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+}
+
+let appState = loadState();
+
+function getStage(id) {
+  return appState[id] || { status: 'pending', notes: '', checks: {} };
+}
+
+function updateStage(id, patch) {
+  appState[id] = { ...getStage(id), ...patch };
+  saveState(appState);
+}
+
+/* ─── PROGRESS ──────────────────────────────────── */
+function refreshProgress() {
+  let score = 0;
+  STAGES.forEach(s => {
+    const st = getStage(s.id).status;
+    if (st === 'progress') score += 0.5;
+    if (st === 'done')     score += 1;
+  });
+  const pct = Math.round((score / STAGES.length) * 100);
+  document.getElementById('prog-pct').textContent  = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+/* ─── TOAST ─────────────────────────────────────── */
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' ' + type : '') + ' show';
+  setTimeout(() => { t.classList.remove('show'); }, 2000);
+}
+
+/* ─── RENDER ────────────────────────────────────── */
+function render() {
+  const list = document.getElementById('stage-list');
+  list.innerHTML = '';
+
+  STAGES.forEach(stage => {
+    const st = getStage(stage.id);
+    const card = document.createElement('div');
+    card.className = `stage-card state-${st.status}`;
+    card.id = `card-${stage.id}`;
+
+    // Build checklist HTML
+    const ciItems = stage.checklist.map((item, i) => {
+      const checked = st.checks && st.checks[i] ? 'checked' : '';
+      return `<div class="checklist-item ${checked}" data-stage="${stage.id}" data-idx="${i}">
+        <div class="ci-box">${checked ? '✓' : ''}</div>
+        <div class="ci-text">${item}</div>
+      </div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="stage-header" data-id="${stage.id}">
+        <span class="stage-num">${stage.num}</span>
+        <div class="stage-dot"></div>
+        <div class="stage-info">
+          <div class="stage-name">${stage.name}</div>
+          <div class="stage-owner-tag">${stage.owner}</div>
+        </div>
+        <button class="stage-status-btn" data-cycle="${stage.id}">
+          ${STATUS_ICONS[st.status]} ${STATUS_LABELS[st.status]}
+        </button>
+        <div class="stage-toggle">▾</div>
+      </div>
+      <div class="stage-body">
+        <div class="stage-body-inner">
+          <div class="stage-desc-block">
+            <div class="block-label">Descripción de la etapa</div>
+            <p class="stage-description">${stage.description}</p>
+            <div class="stage-deliverable">
+              <strong>Entregable clave</strong>
+              ${stage.deliverable}
+            </div>
+            <div class="stage-checklist" style="margin-top:20px;">
+              <div class="block-label">Checklist de tareas</div>
+              ${ciItems}
+            </div>
+          </div>
+          <div class="notes-block">
+            <div class="block-label">Notas · Avances · Blockers</div>
+            <textarea class="notes-area"
+              placeholder="Escribe aquí notas, avances o blockers de esta etapa..."
+              id="notes-${stage.id}"
+            >${st.notes || ''}</textarea>
+            <div class="notes-actions">
+              <span class="btn-saved" id="saved-${stage.id}">✓ Guardado</span>
+              <button class="btn-save" data-save="${stage.id}">Guardar nota</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    list.appendChild(card);
+  });
+
+  attachEvents();
+  refreshProgress();
+}
+
+/* ─── EVENTS ────────────────────────────────────── */
+function attachEvents() {
+  // Toggle expand
+  document.querySelectorAll('.stage-header').forEach(header => {
+    header.addEventListener('click', e => {
+      if (e.target.closest('.stage-status-btn')) return;
+      const id = header.dataset.id;
+      const card = document.getElementById(`card-${id}`);
+      card.classList.toggle('expanded');
+    });
+  });
+
+  // Cycle status
+  document.querySelectorAll('.stage-status-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = parseInt(btn.dataset.cycle);
+      const st = getStage(id);
+      const cur = STATUS_CYCLE.indexOf(st.status);
+      const next = STATUS_CYCLE[(cur + 1) % STATUS_CYCLE.length];
+      updateStage(id, { status: next });
+      showToast('Estado actualizado: ' + STATUS_LABELS[next], next === 'done' ? 'gold' : '');
+      render();
+    });
+  });
+
+  // Save notes
+  document.querySelectorAll('.btn-save').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.save);
+      const txt = document.getElementById(`notes-${id}`).value;
+      updateStage(id, { notes: txt });
+      const saved = document.getElementById(`saved-${id}`);
+      saved.classList.add('show');
+      setTimeout(() => saved.classList.remove('show'), 2000);
+    });
+  });
+
+  // Checklist items
+  document.querySelectorAll('.checklist-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const stageId = parseInt(item.dataset.stage);
+      const idx = parseInt(item.dataset.idx);
+      const st = getStage(stageId);
+      const checks = { ...(st.checks || {}) };
+      checks[idx] = !checks[idx];
+      updateStage(stageId, { checks });
+      item.classList.toggle('checked');
+      const box = item.querySelector('.ci-box');
+      box.textContent = item.classList.contains('checked') ? '✓' : '';
+    });
+  });
+
+  // Nav highlight on scroll
+  const sections = ['vista-ejecutiva', 'tablero-trabajo'];
+  const links = document.querySelectorAll('.nav-links a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) obs.observe(el);
+  });
+}
+
+/* ─── INIT ──────────────────────────────────────── */
+render();
+
+// Set last update from stored timestamp
+const raw = localStorage.getItem('lm_cert_v2');
+if (raw) {
+  document.getElementById('last-update').textContent = '(cargado desde sesión anterior)';
+}
+</script>
+</body>
+</html>
